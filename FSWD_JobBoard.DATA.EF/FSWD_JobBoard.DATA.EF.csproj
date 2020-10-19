@@ -90,6 +90,8 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net.Http.WebRequest" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>packages\Microsoft.AspNet.WebPages.3.1.1\lib\net45\System.Web.Helpers.dll</HintPath>
     </Reference>
@@ -122,91 +124,69 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="App_Start\BundleConfig.cs" />
-    <Compile Include="App_Start\FilterConfig.cs" />
-    <Compile Include="App_Start\IdentityConfig.cs" />
-    <Compile Include="App_Start\RouteConfig.cs" />
-    <Compile Include="App_Start\Startup.Auth.cs" />
-    <Compile Include="Class1.cs" />
-    <Compile Include="Controllers\AccountController.cs" />
-    <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\ManageController.cs" />
-    <Compile Include="Controllers\RolesAdminController.cs" />
-    <Compile Include="Controllers\UserAdminController.cs" />
-    <Compile Include="Global.asax.cs" />
-    <Compile Include="Models\AccountViewModels.cs" />
-    <Compile Include="Models\AdminViewModel.cs" />
-    <Compile Include="Models\IdentityModels.cs" />
-    <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Application.cs">
+      <DependentUpon>FSWD_JobBoardModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ApplicationStatu.cs">
+      <DependentUpon>FSWD_JobBoardModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="FSWD_JobBoardModel.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>FSWD_JobBoardModel.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="FSWD_JobBoardModel.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>FSWD_JobBoardModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="FSWD_JobBoardModel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>FSWD_JobBoardModel.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Location.cs">
+      <DependentUpon>FSWD_JobBoardModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Metadata\JobBoardMetadata.cs" />
+    <Compile Include="OpenPosition.cs">
+      <DependentUpon>FSWD_JobBoardModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Position.cs">
+      <DependentUpon>FSWD_JobBoardModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Startup.cs" />
+    <Compile Include="UserDetail.cs">
+      <DependentUpon>FSWD_JobBoardModel.tt</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-    <None Include="fonts\glyphicons-halflings-regular.eot" />
-    <None Include="fonts\glyphicons-halflings-regular.ttf" />
-    <None Include="fonts\glyphicons-halflings-regular.woff" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+    <EntityDeploy Include="FSWD_JobBoardModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>FSWD_JobBoardModel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="FSWD_JobBoardModel.edmx.diagram">
+      <DependentUpon>FSWD_JobBoardModel.edmx</DependentUpon>
+    </None>
     <None Include="packages.config" />
-    <None Include="Scripts\jquery-1.10.2.min.map" />
-    <None Include="Views\Account\ConfirmEmail.cshtml" />
-    <None Include="Views\Account\DisplayEmail.cshtml" />
-    <None Include="Views\Account\ExternalLoginConfirmation.cshtml" />
-    <None Include="Views\Account\ExternalLoginFailure.cshtml" />
-    <None Include="Views\Account\ForgotPassword.cshtml" />
-    <None Include="Views\Account\ForgotPasswordConfirmation.cshtml" />
-    <None Include="Views\Account\Login.cshtml" />
-    <None Include="Views\Account\Register.cshtml" />
-    <None Include="Views\Account\ResetPassword.cshtml" />
-    <None Include="Views\Account\ResetPasswordConfirmation.cshtml" />
-    <None Include="Views\Account\SendCode.cshtml" />
-    <None Include="Views\Account\VerifyCode.cshtml" />
-    <None Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
-    <None Include="Views\Home\About.cshtml" />
-    <None Include="Views\Home\Contact.cshtml" />
-    <None Include="Views\Home\Index.cshtml" />
-    <None Include="Views\Manage\AddPhoneNumber.cshtml" />
-    <None Include="Views\Manage\ChangePassword.cshtml" />
-    <None Include="Views\Manage\Index.cshtml" />
-    <None Include="Views\Manage\ManageLogins.cshtml" />
-    <None Include="Views\Manage\SetPassword.cshtml" />
-    <None Include="Views\Manage\VerifyPhoneNumber.cshtml" />
-    <None Include="Views\RolesAdmin\Create.cshtml" />
-    <None Include="Views\RolesAdmin\Delete.cshtml" />
-    <None Include="Views\RolesAdmin\Details.cshtml" />
-    <None Include="Views\RolesAdmin\Edit.cshtml" />
-    <None Include="Views\RolesAdmin\Index.cshtml" />
-    <None Include="Views\Shared\Error.cshtml" />
-    <None Include="Views\Shared\Lockout.cshtml" />
-    <None Include="Views\Shared\_Layout.cshtml" />
-    <None Include="Views\Shared\_LoginPartial.cshtml" />
-    <None Include="Views\UsersAdmin\Create.cshtml" />
-    <None Include="Views\UsersAdmin\Delete.cshtml" />
-    <None Include="Views\UsersAdmin\Details.cshtml" />
-    <None Include="Views\UsersAdmin\Edit.cshtml" />
-    <None Include="Views\UsersAdmin\Index.cshtml" />
-    <None Include="Views\_ViewStart.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\bootstrap-theme.css" />
-    <Content Include="Content\bootstrap-theme.min.css" />
-    <Content Include="Content\bootstrap.css" />
-    <Content Include="Content\bootstrap.min.css" />
-    <Content Include="Content\Site.css" />
-    <Content Include="fonts\glyphicons-halflings-regular.svg" />
-    <Content Include="Global.asax" />
-    <Content Include="Scripts\bootstrap.js" />
-    <Content Include="Scripts\bootstrap.min.js" />
-    <Content Include="Scripts\jquery-1.10.2.intellisense.js" />
-    <Content Include="Scripts\jquery-1.10.2.js" />
-    <Content Include="Scripts\jquery-1.10.2.min.js" />
-    <Content Include="Scripts\jquery.validate-vsdoc.js" />
-    <Content Include="Scripts\jquery.validate.js" />
-    <Content Include="Scripts\jquery.validate.min.js" />
-    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
-    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
-    <Content Include="Scripts\modernizr-2.6.2.js" />
-    <Content Include="Scripts\respond.js" />
-    <Content Include="Scripts\respond.min.js" />
+    <Content Include="FSWD_JobBoardModel.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>FSWD_JobBoardModel.edmx</DependentUpon>
+      <LastGenOutput>FSWD_JobBoardModel.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="FSWD_JobBoardModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>FSWD_JobBoardModel.edmx</DependentUpon>
+      <LastGenOutput>FSWD_JobBoardModel.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

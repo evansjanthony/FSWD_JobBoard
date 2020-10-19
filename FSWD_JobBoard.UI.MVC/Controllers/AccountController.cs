@@ -1,7 +1,9 @@
-﻿using FSWD_JobBoard.UI.MVC.Models;
+﻿using FSWD_JobBoard.DATA.EF;
+using FSWD_JobBoard.UI.MVC.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -16,7 +18,7 @@ namespace FSWD_JobBoard.UI.MVC.Controllers
         {
         }
 
-        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager )
+        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
         {
             UserManager = userManager;
             SignInManager = signInManager;
@@ -145,7 +147,7 @@ namespace FSWD_JobBoard.UI.MVC.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Register(RegisterViewModel model)
+        public async Task<ActionResult> Register(RegisterViewModel model, HttpPostedFileBase resumePDF)
         {
             if (ModelState.IsValid)
             {
@@ -153,11 +155,62 @@ namespace FSWD_JobBoard.UI.MVC.Controllers
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    var code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                    var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                    await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking this link: <a href=\"" + callbackUrl + "\">link</a>");
-                    ViewBag.Link = callbackUrl;
-                    return View("DisplayEmail");
+                    #region Commented out
+                    //var code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+                    //var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+                    //await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking this link: <a href=\"" + callbackUrl + "\">link</a>");
+                    //ViewBag.Link = callbackUrl;
+                    //return View("DisplayEmail");
+                    #endregion
+
+                    // Add USER to default role (MVC2)
+                    #region Add user to a Role and Redirect to Login
+                    UserManager.AddToRole(user.Id, "Employee");
+                    #endregion
+
+                    // Create UserDetails object (MVC3)
+                    #region Assign User Details During Registration
+                    UserDetail newUserDetails = new UserDetail();
+                    newUserDetails.UserID = user.Id;
+                    newUserDetails.FirstName = model.FirstName;
+                    newUserDetails.LastName = model.LastName;
+
+
+                    // Before saving UserDetails object, process file upload (Region step 4 in QG)
+                    #region File Upload
+                    string resumeFilename = "noPDF.pdf";
+                    if (resumePDF != null)
+                    {
+                        resumeFilename = resumePDF.FileName;
+
+                        string ext = resumeFilename.Substring(resumeFilename.LastIndexOf('.'));
+
+                        string[] goodExts = { ".pdf" };
+
+                        if (goodExts.Contains(ext.ToLower()) && (resumePDF.ContentLength <= 4194304))
+                        {
+                            resumeFilename = Guid.NewGuid() + ext;
+
+                            resumePDF.SaveAs(Server.MapPath("~/Content/resumePDFs/" + resumeFilename));
+                        }
+                        else
+                        {
+                            resumeFilename = "noPDF.pdf";
+                        }
+                    }
+                    #endregion
+
+                    newUserDetails.ResumeFilename = resumeFilename;
+
+
+                    // Save UserDetails to database (last step of creating UD object in MVC3)
+
+                    FSWD_JobBoardEntities db = new FSWD_JobBoardEntities();
+                    db.UserDetails.Add(newUserDetails);
+                    db.SaveChanges();
+
+                    #endregion
+                    return RedirectToAction("Index", "Home");
                 }
                 AddErrors(result);
             }
